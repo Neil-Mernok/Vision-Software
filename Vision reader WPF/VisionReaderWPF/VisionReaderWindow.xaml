@@ -1,0 +1,350 @@
+﻿<Window
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+        xmlns:local="clr-namespace:VisionReader"
+        xmlns:ig="http://schemas.infragistics.com/xaml" x:Class="VisionReader.MainWindow"
+        mc:Ignorable="d"
+        Title="VISION Module Interface - V14" Height="768" Width="1024" Closing="Window_Closing" Loaded="Window_Loaded">
+    <!--Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF1068A4" Offset="0"/>
+            <GradientStop Color="#FF7FB8F1" Offset="1"/>
+        </LinearGradientBrush>
+    </-->
+    <Window.Resources>
+        <ObjectDataProvider ObjectType="{x:Type ports:SerialPort}" MethodName="GetPortNames" x:Key="portNames"/>
+        <Storyboard x:Key="sb_com_activity">
+            <DoubleAnimation Storyboard.TargetName="ComActivity" 
+          Storyboard.TargetProperty="Opacity" From="1" To="0.5" 
+          Duration="0:0:0.2" BeginTime="0:0:0"/>
+            <!--<DoubleAnimation Storyboard.TargetName="ComActivity" 
+          Storyboard.TargetProperty="Opacity" From="0" To="1" 
+          Duration="0:0:0.3" BeginTime="0:0:0"/>
+            <DoubleAnimation Storyboard.TargetName="ComActivity" 
+          Storyboard.TargetProperty="Opacity" From="1" To="0" 
+          Duration="0:0:0.1" BeginTime="0:0:0.3"/>-->
+        </Storyboard>
+        <DataTemplate x:Key="LFTemplate">
+            <StackPanel Orientation="Horizontal">
+                <ProgressBar MinWidth="50" Minimum="0" Maximum="31" Value="{Binding LF_Data.LF}" Foreground="{Binding LF_Data.Color}" Opacity="{Binding LF_Data.AgeOpacity}"/>
+                <TextBlock Text="{Binding LF_Data}" Margin="5,4,5,4" FontWeight="Bold" MinWidth="50" Opacity="{Binding LF_Data.AgeOpacity}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="TypeIconTemplate" >
+            <StackPanel Background="#7F000000">
+                <Image Source="{Binding typeIconUri}" Height="25" Width ="50"/>
+            </StackPanel>
+        </DataTemplate>
+        <RoutedUICommand x:Key="Open_COM" Text="Open COM port">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+O</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <RoutedUICommand x:Key="Close_COM" Text="Close COM port">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+X</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <RoutedUICommand x:Key="Open_Bootload" Text="Open Bootlooad Application">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+B</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <RoutedUICommand x:Key="Open_RFIDConfig" Text="Open RFID Config Application">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+R</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <RoutedUICommand x:Key="Exit_Application" Text="Close Application">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>CTRL+Q</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <!--<RoutedUICommand x:Key="Help_Documentation" Text="Help Documentation">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>F1</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>-->
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource Open_COM}" Executed="button_settings_Click"/>
+        <CommandBinding Command="{StaticResource Close_COM}" Executed="button_close_port_Click"/>
+        <CommandBinding Command="{StaticResource Open_Bootload}" Executed="button_bootloader_Click"/>
+        <CommandBinding Command="{StaticResource Open_RFIDConfig}" Executed="button_RFID_config_Click"/>
+        <CommandBinding Command="{StaticResource Exit_Application}" Executed="_MenuExit_Click"/>
+        <!--<CommandBinding Command="{StaticResource Help_Documentation}" Executed="_MenuExit_Click"></CommandBinding>-->
+    </Window.CommandBindings>
+    <Grid Margin="0,0,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="33"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter  ResizeDirection="Rows" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment =" Stretch"  VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext" Margin="0,5,0,0"/>
+        <Grid Grid.Column="2" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="button_get_tags" Content="Get all tags" VerticalAlignment="Center" Grid.Column="0" MinWidth="75" Click="button_get_tags_Click" Margin="5,2,5,3" Height="20"/>
+            <Button x:Name="button_get_lf_tags" Content="Get LF tags" VerticalAlignment="Center" Grid.Column="1" MinWidth="65" Margin="5,2,55,3" Click="button_get_lf_tags_Click" Height="20"/>
+            <TextBox x:Name="textbox_db" HorizontalAlignment="Right"  VerticalAlignment="Center" Width="26" Grid.Column="1" Grid.Row="1" Height="20" Margin="0,0,4,0" Text="0"/>
+            <Label x:Name="db_label" Content="dB:" Grid.Column="1" HorizontalAlignment="Right" Width="54" VerticalAlignment="Center" Grid.Row="1" />
+        </Grid>
+        <DockPanel x:Name="MenuPanel" Grid.ColumnSpan="3" Grid.Row="0">
+            <Menu x:Name ="Menu_Item">
+                <MenuItem Header="File" FontSize="12">
+                    <MenuItem x:Name="Serial_OpenCOM" Header="_Open COM Port" Command="{StaticResource Open_COM}"/>
+                    <MenuItem x:Name="Serial_CloseCOM" Header="_Close COM Port" Command="{StaticResource Close_COM}"/>
+                    <Separator/>
+                    <MenuItem x:Name="RFID_COM" Header="_RFID Config Utility" Command="{StaticResource Open_RFIDConfig}"/>
+                    <MenuItem x:Name="Bootloader_COM" Header="_Boot-load Utility" Command="{StaticResource Open_Bootload}"/>
+                    <Separator/>
+                    <MenuItem x:Name="Unlock_Interface" Header="_Unlock"/>
+                    <Separator/>
+                    <MenuItem x:Name="Exit_Application" Header="_Exit" Command="{StaticResource Exit_Application}"/>
+                </MenuItem>
+                <MenuItem Header="Help" FontSize="12">
+                    <MenuItem x:Name="VISION_Module_About" Header="_About VISION Module Inteface" Click="button_about_Click"/>
+                    <!--<MenuItem x:Name="VISION_Module_TTM" Header="_Technical Training Manual" Command="{StaticResource Help_Documentation}"/>-->
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <!--<Button x:Name="button_open_port" Content="Open" VerticalAlignment="Center" MinWidth="75" Grid.Column="1" Grid.Row="1" Click="button_open_port_Click"  Width="80" Margin="64,5,0,5" HorizontalAlignment="Left" Height="20" />
+        <Button x:Name="button_close_port" Content="Close" VerticalAlignment="Center" MinWidth="75" Grid.Column="1" Grid.Row="2" Click="button_close_port_Click"  Margin="64,5,0,5" Width="80" HorizontalAlignment="Left" IsEnabled="False" Height="20"/>
+        <ComboBox x:Name="comboBox_select_port" VerticalAlignment="Center" Width="80" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource portNames}}" SourceUpdated="comboBox_select_port_SourceUpdated" ContextMenuOpening="comboBox_select_port_ContextMenuOpening" DropDownOpened="comboBox_select_port_DropDownOpened" Height="20" Margin="166,5,0,5" HorizontalAlignment="Left"/>-->
+        <Label x:Name="label" Content="Tags Detected" VerticalAlignment="Bottom" TextElement.FontSize="20" Height="37" Margin="0,0,0,27" Grid.Row="1"/>
+        <Ellipse x:Name="ComActivity" Width="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0" Grid.Row="5" Grid.Column="2"  Height="20" Margin="0,0,5,3" MouseLeftButtonDown="ComActivity_MouseLeftButtonDown">
+            <Ellipse.Fill>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FF009BC9" Offset="0.3"/>
+                    <GradientStop Color="#99DBFAFB" Offset="1"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Label x:Name="COMStatus" Content="COM" TextElement.FontSize="12" VerticalContentAlignment="Center" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,7,25,0" Height="26" Width="37"/>
+        <!--<Label x:Name="label1" Content="Port:" Grid.Column="1" Grid.Row="1" Width="35" VerticalAlignment="Center" Margin="13,2,0,2" HorizontalAlignment="Left" Height="26" />
+        <TextBox x:Name="textbox_select_baud"  VerticalAlignment="Center" Width="80" Grid.Column="1" Grid.Row="2" Height="20" Margin="166,5,0,5" HorizontalAlignment="Left"/>
+        <Label x:Name="label2" Content="Baud:" Grid.Column="1"  Grid.Row="2" Width="39" VerticalAlignment="Center" Margin="13,2,0,2" HorizontalAlignment="Left" Height="26"/>-->
+        <DataGrid x:Name="dataGrid" Grid.Row="2" Grid.ColumnSpan="3" MinHeight="150" MaxHeight="450" AutoGenerateColumns="True" MinColumnWidth="50" SelectionChanged="dataGrid_SelectionChanged" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AutoGeneratingColumn="dataGrid_AutoGeneratingColumn" CanUserAddRows="False" AlternatingRowBackground="#F3F9F8FF" RowBackground="#00000000" Background="#FFEBF0ED" MouseLeave="dataGrid_MouseLeave" LoadingRow="dataGrid_LoadingRow" ContextMenuOpening="dataGrid_ContextMenuOpening">
+            <DataGrid.ContextMenu>
+                <ContextMenu x:Name ="TagOptions"/>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <TabControl x:Name="tabControl"  Grid.Row="4" Grid.ColumnSpan="3" SelectionChanged="tabControl_SelectionChanged" Margin="0,0,0,28" Grid.RowSpan="2" Height="Auto" VerticalAlignment="Stretch">
+            <TabItem Header="Settings" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0" Width="100">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!--<ColumnDefinition x:Name="Col_Log" Width="22*"/>-->
+                        <!--<ColumnDefinition Width="37*"/>-->
+                        <!--<ColumnDefinition Width="76*"/>-->
+                        <ColumnDefinition Width="211*"/>
+                        <ColumnDefinition Width="573*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="120"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <avalonEdit:TextEditor x:Name="TextBox_comlog" Background="#EEE"  Grid.Row="1" FontFamily="Consolas" VerticalAlignment="Stretch" Margin="5,0"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <!--<ColumnDefinition x:Name="Col_Log" Width="22*"/>-->
+                            <!--<ColumnDefinition Width="37*"/>-->
+                            <!--<ColumnDefinition Width="76*"/>-->
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="label5" Content="Status:" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="1" />
+                        <TextBlock x:Name="textBlockVisionStatus" Background="#EEE" TextWrapping="Wrap"  Text="Not Connected" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,2"/>
+                        <Button x:Name="button_clearlog" Content="Clear log" HorizontalAlignment="Right" VerticalAlignment="Bottom"  MinWidth="75" Click="button_clearlog_Click" Width="75" Height="20" Grid.Column="1" Grid.Row="5"/>
+                        <CheckBox x:Name="checkBox_LF_log" Content="Enable LF response log" Grid.Column="0" Grid.Row="3" VerticalAlignment="Top"/>
+                        <CheckBox x:Name="checkBox_RF_log" Content="Enable RF broadcasting log"  Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" />
+                        <CheckBox x:Name="checkBox_log_enable" Content="Enable log" Grid.Column="0" Grid.Row="5" Checked="checkBox_log_enable_Checked" Unchecked="checkBox_log_enable_Unchecked" VerticalAlignment="Top"/>
+                        <Slider x:Name="exclusion_time" Grid.Column="0" HorizontalAlignment="Stretch" Grid.Row="6" Maximum="20" Interval="1" TickFrequency="0.2" IsSnapToTickEnabled="True" TickPlacement="TopLeft" Value="5"/>
+                        <Label x:Name="exclusion_time_label" Grid.Column="1" Grid.Row="6" Content="{Binding ElementName=exclusion_time, Path=Value, StringFormat={}{1}{0:N2} Seconds:  }" Margin="0,0,73,0"/>
+                    </Grid>
+                    <WindowsFormsHost x:Name="FormsHostPG" Grid.Column="4" Grid.Row="1"  FontSize="11" FontFamily="Microsoft Sans Serif" />
+                    <Grid Grid.Column="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="90*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="button_get_settings" Content="Get Settings" Grid.Column="0"  Grid.Row="0" MinWidth="75" Click="button_get_settings_Click" Margin="5,5,5,5" Width="130" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_send_settings" Content="Send Settings" Grid.Column="0" MinWidth="75" Grid.Row="1" Click="button_send_Settings_Click" Margin="5,5,5,5" Width="130" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_send_all_settings" Content="Send All Settings" MinWidth="75" Grid.Row="2" Margin="5,5,5,5" Width="130" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" Click="button_send_all_settings_Click"/>
+                        <Button x:Name="button_set_pulse100" Content="Set PULSE100 Settings" Grid.Column="2" Grid.Row="0" MinWidth="75" Click="button_set_mantag_Click" Width="130" Margin="5,5,5,5" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_set_pulse300" Content="Set PULSE300 Settings" Grid.Column="2" Grid.Row="1" MinWidth="75" Click="button_set_pulse300_Click" Width="130" Margin="5,5,5,5" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_set_reader" Content="Set PULSE400 Settings" Grid.Column="2" Grid.Row="2" MinWidth="75" Margin="5,5,5,5" Click="button_set_reader_Click" Width="130" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_set_pulse500" Content="Set PULSE500 Settings" Grid.Column="2" Grid.Row="3" MinWidth="75"  Height="20" VerticalAlignment="Center" Click="button_set_pulse500_Click" Width="130" Margin="5,5,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_reset" Content="Reset"  Grid.Column="1" Grid.Row="2" MinWidth="75" Click="button_reset_Click" Height="20" VerticalAlignment="Bottom" Width="130" Margin="5,0,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_reset_odo" Content="Reset GPS Odometer"  Grid.Column="1" Grid.Row="3" MinWidth="75" Click="button_reset_odo_Click" Height="20" VerticalAlignment="Bottom" Width="130" Margin="5,0,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_revision" Content="Get Revision" Grid.Column="1" Grid.Row="1" MinWidth="75" Height="20" VerticalAlignment="Center" Width="130" Margin="5,5,5,5" Click="button_revision_Click" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_get_status" Content="Get Status" Grid.Column="1" Grid.Row="0" MinWidth="75" Height="20" VerticalAlignment="Center" Width="130" Click="button_get_status_Click" HorizontalAlignment="Center" Margin="5,5,5,5"/>
+                        <Button x:Name="button_set_ranger" Content="Set RANGER Settings" Grid.Column="3" Grid.Row="0" MinWidth="75"  Height="20" VerticalAlignment="Center" Click="button_set_ranger_Click" Width="130" Margin="5,5,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_set_gps" Content="Set GPS100 Settings" Grid.Column="3" Grid.Row="1" MinWidth="75"  Height="20" VerticalAlignment="Center" Click="button_set_gps_Click" Width="130" Margin="5,5,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_test_stuff" Content="Program EEPROM" Grid.Column="0" Grid.Row="3" Click="button_test_stuff_Click" Height="20" Width="130" Margin="6,0,7,5" VerticalAlignment="Bottom"/>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Functional Test" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0" Width="100">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16*"/>
+                        <ColumnDefinition Width="117*"/>
+                        <ColumnDefinition Width="474*"/>
+                        <ColumnDefinition Width="312*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="150*"/>
+                        <RowDefinition Height="257*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button x:Name="button_run_test" Content="Run Test" MinWidth="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="85,37,0,0" Height="20" Width="130" Click="button_run_test_Click" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <Button x:Name="button_generate_report" Content="Generate Report" MinWidth="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="85,62,0,0" Height="20" Width="130" Click="button_generate_report_Click" IsEnabled="False" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <ComboBox x:Name="comboBox_Test_Type" HorizontalAlignment="Left" Margin="85,10,0,0" VerticalAlignment="Top" Width="130" SelectedIndex="0" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    <StackPanel x:Name="frame_test_col" Background="Gray" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,5" MaxHeight="120" Grid.Column="3" Grid.RowSpan="2">
+                        <Label x:Name="label_test_success" Content="Working:              " TextElement.FontSize="20" />
+                        <Label x:Name="label_module_name" Content="Vision Module UID: 0xXXXXXXXX" TextElement.FontSize="20" />
+                        <Label x:Name="label_PCB_Info" Content="PCB Number: XXXXXXXX" TextElement.FontSize="20" />
+                    </StackPanel>
+                    <GroupBox x:Name="groupBox" Margin="2,10,2,2" Grid.Row="1" Grid.ColumnSpan="4">
+                        <Grid>
+                            <Label x:Name="labelperson" Content="Test operator:" Margin="10,10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <TextBox x:Name="textBox_testperson" Height="23" TextWrapping="Wrap" Text="" Margin="129,14,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" TextChanged="enable_Generate_Button"/>
+                            <Label x:Name="labelboard" Content="Unit serial number:" Margin="10,40,0,0" Width="114" Height="23" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <TextBox x:Name="textBox_board" Height="23" TextWrapping="Wrap" Text="" Margin="129,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" TextChanged="enable_Generate_Button"/>
+                            <Label x:Name="labelnotes" Content="Additional notes:" Margin="10,68,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="101"/>
+                            <TextBox x:Name="textBox_test_notes" AcceptsReturn="True" TextWrapping="WrapWithOverflow" Text="" Margin="129,70,0,-2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="559" Height="167"/>
+                        </Grid>
+                    </GroupBox>
+                    <ComboBox x:Name="comboBox_Test_Operators" HorizontalAlignment="Left" VerticalAlignment="Top" Width="130" SelectedIndex="0" Grid.Column="2" Margin="292,10,0,0"/>
+                    <Label x:Name="label_Test_Type" Content="Test Unit Type:" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Demonstration" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0" Width="100">
+                <Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Viewbox Grid.ColumnSpan="2" Grid.Column="2" Margin="68,5,71,5" Grid.RowSpan="4" Stretch="Fill" Visibility="Collapsed">
+                            <Grid Height="110" Width="494">
+                                <Button x:Name="Force_RF_Critical" Content="Force Single GPS Critical Zone"  Grid.Row="0" MinWidth="180" Click="Force_RF_Critical_Zone" Margin="0,0,314,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                                <Button x:Name="Force_RF_Warning" Content="Force Single GPS Warning Zone" MinWidth="180" Click="Force_RF_Warning_Zone" Margin="0,30,314,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                                <Button x:Name="Force_RF_Presence" Content="Force Single GPS Presence Zone" MinWidth="180" Click="Force_RF_Presence_Zone" Margin="0,60,314,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                                <Button x:Name="Force_LF_Critical" Content="Force Single LF Critical Zone" MinWidth="180" Click="Force_LF_Critical_Zone" Margin="314,0,0,90" Width="180" HorizontalAlignment="Center" Grid.Row="0"/>
+                                <Button x:Name="Force_LF_Warning" Content="Force Single LF Warning Zone" MinWidth="180" Click="Force_LF_Warning_Zone" Margin="314,30,0,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                                <Button x:Name="Force_LF_Presence" Content="Force Single LF Presence Zone" MinWidth="180" Click="Force_LF_Presence_Zone" Margin="314,60,0,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Viewbox>
+                        <Button x:Name="Force_RF_Repeat" Content="Repeat GPS Zone" MinWidth="180" Click="Force_RF_Repeat_Zone" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2"/>
+                        <Canvas Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top">
+                            <Viewbox Height="430"  Stretch="Fill" Width="auto" HorizontalAlignment="Stretch" Canvas.Left="-2" Canvas.Top="-7">
+                                <Grid Height="508" Width="515">
+                                    <Rectangle x:Name="Circle_Top_Blue" Fill="Blue" Clip="M71.414671,127.95537 L25.616001,81.176148 C25.616001,81.176148 95.00017,4.9582183 202,6.7915525 C301.49919,8.4963709 368.04169,70.958495 378.375,81.291819 L335.29143,126.20832 C335.29143,126.20832 287.51056,71.764822 204.00008,72.457863 C123.66694,73.124535 71.359791,127.98438 71.375411,128.00001" Margin="54,0,71,380" MouseLeftButtonDown="Circle_Top_Blue_MouseLeftButtonDown" Opacity="0.5" MouseEnter="Rectangle_Section_MouseEnter" MouseLeave="Rectangle_Section_MouseLeave"/>
+                                    <Rectangle x:Name="Circle_Right_Blue" Fill="Blue" Clip="M4.8948515,66.375784 L48.331157,21.687999 C48.331157,21.687999 123.10112,89.999804 121.26783,197 C119.56305,296.49953 58.10101,361.91665 47.767937,372.25 L3.5610056,329.33339 C3.5610056,329.33339 59.649809,280.2319 58.14997,196.73174 C56.641227,112.73584 4.97819,66.500784 4.8531822,66.417444" Margin="387,62,0,56" MouseLeftButtonDown="Circle_Right_Blue_MouseLeftButtonDown" Opacity="0.51" MouseEnter="Rectangle_Section_MouseEnter" MouseLeave="Rectangle_Section_MouseLeave"/>
+                                    <Rectangle x:Name="Circle_Bottom_Blue" Fill="Blue" Clip="M333.74996,13.31184 L377.5,55.916167 C377.5,55.916167 311.75025,130.24893 204.75,128.41564 C105.25043,126.71085 38.083354,67.998429 27.750002,57.66533 L70.999723,15.478356 C70.999723,15.478356 119.2498,70.165845 202.75,68.665999 C286.74593,67.157263 333.68746,13.27017 333.72913,13.291" Margin="54,380,71,0" MouseDown="Circle_Bottom_Blue_MouseDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Left_Blue" Fill="Blue" Clip="M123.01726,317.17009 L80.187975,359.186 C80.187975,359.186 4.1043025,287.18619 5.9376096,180.186 C7.6424028,80.68649 67.354806,17.456352 77.687977,7.1230057 L123.58,53.607778 C123.58,53.607778 67.556633,98.667898 69.056482,182.16805 C70.565249,266.16394 123.0168,317.19338 123.01234,317.16365" Margin="0,76,387,42" MouseLeftButtonDown="Circle_Left_Blue_MouseLeftButtonDown" Opacity="0.5" MouseEnter="Rectangle_Section_MouseEnter" MouseLeave="Rectangle_Section_MouseLeave"/>
+
+                                    <Rectangle x:Name="Circle_Top_Yellow" Fill="Yellow" Clip="M8.562003,64.430754 C54.395905,109.93106 54.097832,110 54.097832,110 C54.097832,110 88.3633,75.67873 138.74958,76.050413 C190.37444,76.431225 221.24943,109.6185 221.24943,109.6185 L267.732,62.725783 C267.732,62.725783 220.50021,9.347191 139.33334,10.513849 C58.166462,11.680507 8.6718743,64.258883 8.562503,64.415134" Margin="119,66,116,332" MouseLeftButtonDown="Circle_Top_Yellow_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Right_Yellow" Fill="Yellow" Clip="M51.496464,10.479507 C5.9959048,56.313609 5.2714959,57.330376 5.2714959,57.330376 C5.2714959,57.330376 40.558959,88.542612 39.80801,141.85655 C39.090591,192.78959 5.6527006,225.16756 5.6527006,225.16756 L49.683961,268.41751 C49.683961,268.41751 103.97563,220.9595 102.80896,139.79228 C101.6423,58.625048 51.746467,10.68263 51.590215,10.573258" Margin="338,120,67,108" MouseLeftButtonDown="Circle_Right_Yellow_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Bottom_Yellow" Fill="Yellow" Clip="M265.60907,48.874913 C219.77498,3.3748049 222,5.6252402 222,5.6252402 C222,5.6252402 185.02729,40.989925 134.66667,39.333331 C83.999763,37.666667 53.830855,6.1671415 53.830855,6.1671415 L8.6720002,51.84391 C8.6720002,51.84391 56.921696,104.0934 138.0889,102.92675 C219.25609,101.7601 265.50063,49.061864 265.61,48.905613" Margin="119,342,116,56" MouseLeftButtonDown="Circle_Bottom_Yellow_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Left_Yellow" Fill="Yellow" Clip="M58.926755,262.9485 C104.42755,217.11458 104.14467,217.82323 104.14467,217.82323 C104.14467,217.82323 66.873784,181.71887 69.207155,131.38525 C71.540535,81.051634 105.1035,49.843457 105.1035,49.843457 L59.416174,4.4684964 C59.416174,4.4684964 4.8901135,51.646611 7.0829117,132.79229 C9.0826165,206.7924 60.067855,264.27599 58.926755,262.96449" Margin="66,128,339,100" MouseLeftButtonDown="Circle_Left_Yellow_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+
+                                    <Rectangle x:Name="Circle_Top_Red" Fill="Red" Clip="M57.584543,88.625997 L7.4589992,39.624963 C7.4589992,39.624963 35.541995,8.5004564 86.791996,6.7506484 C135.89237,5.0742399 168.29224,39.291915 168.79224,39.125246 C169.29224,38.958587 119.62563,88.457968 119.62563,88.457968 C119.62563,88.457968 108.28709,76.761988 89.167292,76.251062 C70.416998,75.749995 57.584543,88.625997 57.584543,88.625997 z" Margin="168,139,167,275" MouseLeftButtonDown="Circle_Top_Red_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Right_Red" Fill="Red" Clip="M2.4290033,61.945896 L52.143582,11.708994 C52.143582,11.708994 83.696729,40.736788 85.44653,91.986737 C87.122931,141.08706 52.191652,173.59831 52.35832,174.09831 C52.524978,174.5983 2.5970315,123.98692 2.5970315,123.98692 C2.5970315,123.98692 14.292964,112.6484 14.803889,93.528613 C15.304953,74.778338 2.4290033,61.945896 2.4290033,61.945896 z" Margin="288,168,133,160" MouseLeftButtonDown="Circle_Right_Red_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle  x:Name="Circle_Bottom_Red" Fill="Red" Clip="M119.1568,1.9397181 L169.63601,51.874193 C169.63601,51.874193 140.58358,82.416745 89.333667,84.16657 C40.233375,85.842994 7.9166215,52.082633 7.4166233,52.249304 C6.9166251,52.415964 58.17671,1.8229978 58.17671,1.8229978 C58.17671,1.8229978 68.432073,13.125098 87.551843,13.63603 C106.30211,14.137101 119.1568,1.9397181 119.1568,1.9397181 z" Margin="168,293,167,121" MouseLeftButtonDown="Circle_Bottom_Red_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+                                    <Rectangle x:Name="Circle_Left_Red" Fill="Red" Clip="M91.816003,123.61579 L40.032873,174.51099 C40.032873,174.51099 8.1881593,146.58367 6.4383869,95.333656 C4.7620125,46.233269 41.021706,12.083666 40.85504,11.583667 C40.688385,11.083668 90.219197,61.885382 90.219197,61.885382 C90.219197,61.885382 79.952236,72.913224 79.44132,92.033032 C78.940264,110.78333 91.816003,123.61579 91.816003,123.61579 z" Margin="133,168,288,160" MouseLeftButtonDown="Circle_Left_Red_MouseLeftButtonDown" Opacity="0.5" MouseLeave="Rectangle_Section_MouseLeave" MouseEnter="Rectangle_Section_MouseEnter"/>
+
+                                    <Rectangle x:Name="Circle_Middle_Black" Fill="Black" Clip="M92.584,51.459 C92.584,74.516888 73.891888,93.209 50.834,93.209 C27.776112,93.209 9.084,74.516888 9.084,51.459 C9.084,28.401112 27.776112,9.709 50.834,9.709 C73.891888,9.709 92.584,28.401112 92.584,51.459 z" Margin="206,210,209,198" MouseLeftButtonDown="Circle_Middle_Black_MouseLeftButtonDown"  />
+                                    <Label x:Name="GPS_selector_lbl" Content="LF" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="36" MouseLeftButtonDown="GPS_selector_lbl_MouseLeftButtonDown" />
+                                </Grid>
+                            </Viewbox>
+
+                        </Canvas>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="GeoMap GPS" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="115" Margin="0,0,0,0">
+                <Grid>
+                    <Button Content="GPS map" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+                    <Button Content="Clear Marks" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+                    <gmaps:GMapControl x:Name="mapView" Loaded="mapView_Loaded" Margin="100,10,10,10"/>
+                    <Label x:Name="GPS_points" Content="Counter:" HorizontalAlignment="Left" Margin="0,91,0,0" VerticalAlignment="Top" Width="85"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <CheckBox x:Name="checkBox_remote_connection" Content="Connect to remote device" HorizontalAlignment="Left" Grid.Row="3" Checked="checkBox_remote_connection_Checked_changed" Unchecked="checkBox_remote_connection_Checked_changed" Margin="10,7,0,0" Width="157" Height="16" VerticalAlignment="Top"/>
+        <TextBlock Margin="0" FontWeight="Bold" MinWidth="50" Opacity="{Binding Current_vision.current_TAG.own_LF.AgeOpacity}" Text="{Binding Current_vision.current_TAG.own_LF}" Grid.Column="0" Grid.Row="3" Width="100" HorizontalAlignment="Right" Foreground="Black" Background="#FF3EC1FF"/>
+        <TextBox x:Name="textBoxListUID" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" Width="150" Margin="0,4,0,0" Height="22" VerticalAlignment="Top"/>
+        <Label x:Name="label3" Content="Selected UID:" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="3" Margin="0,2,155,0" Width="80" Height="26" VerticalAlignment="Top"/>
+        <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <StackPanel Grid.Column="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Width="208" >
+            <Label x:Name="label4" Content="Current UID:" Grid.Column="2" Margin="0,2,0,0" Height="26" VerticalAlignment="Top"  />
+            <TextBox x:Name="textBoxCurUID" TextWrapping="Wrap" Width="133" IsReadOnly="True" Margin="0,4,0,0" Height="22" VerticalAlignment="Top" />
+        </StackPanel>
+        <CheckBox x:Name="checkBox_auto_clear" Content="Auto clean list" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" IsChecked="True" Grid.Row="1" Height="15" Width="95" />
+        <Label x:Name="label_TagCount" Content="List Total: 0" HorizontalAlignment="left" Width="110" VerticalAlignment="Bottom" FontFamily="Consolas" Margin="147,0,0,5" Grid.Row="1" Height="24" />
+        <GroupBox x:Name="groupBox1" Header="List Filter" Grid.Row="1" Margin="0,0,0,1" Grid.Column="1">
+            <Grid>
+                <TextBox x:Name="textBox_listfilter" HorizontalAlignment="Right" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="129"/>
+                <RadioButton x:Name="radioButton_include" Content="Include" HorizontalAlignment="Right" Margin="0,24,71,0" VerticalAlignment="Top" GroupName="FilterIncEx" IsChecked="True"/>
+                <RadioButton x:Name="radioButton_exclude" Content="Exclude" HorizontalAlignment="Right" Margin="0,24,0,0" VerticalAlignment="Top" GroupName="FilterIncEx" RenderTransformOrigin="0.475,-0.933"/>
+                <CheckBox x:Name="checkBox_LF" Content="Has LF" HorizontalAlignment="Left" Margin="0,24,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="checkBox_Name" Content="Has Name" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label6" Content="Search:" Width="52" VerticalAlignment="Top" Margin="0,-4,129,0" HorizontalAlignment="Right"/>
+            </Grid>
+        </GroupBox>
+        <ig:HtmlDocumentAdapter HorizontalAlignment="Left" Height="100" Margin="-147,57,0,0" Grid.Row="4" VerticalAlignment="Top" Width="100"/>
+    </Grid>
+</Window>

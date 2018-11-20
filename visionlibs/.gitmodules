@@ -1,0 +1,6 @@
+[submodule "TagTypes"]
+	path = TagTypes
+	url = https://gitlab.com/MernokVision/TagTypes.git
+
+	branch = master
+
