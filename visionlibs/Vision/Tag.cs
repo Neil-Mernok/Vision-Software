@@ -417,6 +417,28 @@ namespace Vision
             set { SetField(ref rssi, value, "RSSI"); }
         }
 
+        private double Speed_km_h = 000000;
+        public string Speed
+        {
+            get
+            {
+                return (Speed_km_h / 1000.0 * 3.6).ToString() + " km/h";
+            }
+            //return Latitude_deg.ToString().PadLeft(4, '0').Insert(2, "."); }
+            // get { return Latitude_deg; }
+            // set { SetField(ref Latitude_deg, value, "Latitude_Deg"); }
+        }
+
+        private int _reverse;
+        public bool Reverse
+        {
+            get
+            {
+                return Convert.ToBoolean(_reverse);
+            }
+
+        }
+
         private _kind ikind;
         public _kind Kind
         {
@@ -473,18 +495,6 @@ namespace Vision
             get
             {
                 return (Vertical_Acc / 1000).ToString() + " m";
-            }
-            //return Latitude_deg.ToString().PadLeft(4, '0').Insert(2, "."); }
-            // get { return Latitude_deg; }
-            // set { SetField(ref Latitude_deg, value, "Latitude_Deg"); }
-        }
-
-        private double Speed_km_h = 000000;
-        public string Speed
-        {
-            get
-            {
-                return (Speed_km_h/1000.0*3.6).ToString() + " km/h";
             }
             //return Latitude_deg.ToString().PadLeft(4, '0').Insert(2, "."); }
             // get { return Latitude_deg; }
@@ -589,6 +599,8 @@ namespace Vision
 
         public void parse_message_into_TAG(byte[] data)
         {
+            int PacketSize = 33;
+            int GPS_PacketSize = 58;
             SetField(ref _UID, parse_message_UID(data), "UID");
 
             if (data.Length == 8)
@@ -669,9 +681,11 @@ namespace Vision
                 //_MantagAck = data[24];
                 SetField(ref _MantagAck, data[23]&0x01, "MantagAck");
                 //data24 = reverse status byte
+                SetField(ref _reverse, data[24] & 0x01, "Reverse");
                 //data25 = vehicle length
                 //data26 = Vehicle width
                 //data27 = stopping distance
+                SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
 
 
                 if ((Kind == _kind.Pulse_GPS)&&(data.Length>56))
@@ -681,11 +695,11 @@ namespace Vision
                     //Vertical_Acc = BitConverter.ToInt32(data, 32);
                     //Horizontal_Acc = BitConverter.ToInt32(data, 36);
                     //Speed_km_h = BitConverter.ToInt32(data, 40);
-                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 28), "Longitude");
-                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 32), "Latitude");
-                    SetField(ref Vertical_Acc, BitConverter.ToInt32(data, 36), "Vertical_Accuracy");
-                    SetField(ref Horizontal_Acc, BitConverter.ToInt32(data, 40), "Horizontal_Accuracy");
-                    SetField(ref Speed_km_h, BitConverter.ToInt32(data, 44), "Speed");
+                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 32), "Longitude");
+                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 36), "Latitude");
+                    SetField(ref Vertical_Acc, BitConverter.ToInt32(data, 40), "Vertical_Accuracy");
+                    SetField(ref Horizontal_Acc, BitConverter.ToInt32(data, 44), "Horizontal_Accuracy");
+                    //SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
                     SetField(ref Vehicle_heading_, BitConverter.ToInt32(data,48), "Heading_v");
                     
                     //Last_GPS.HeadingVehicle = BitConverter.ToInt32(data, 48);
@@ -696,8 +710,8 @@ namespace Vision
                     SetField(ref Sea_Level_m, BitConverter.ToInt32(data, 54) / 1000, "Sea_Level");
 
 
-                    if ((data.Length > 57)&&(data.Length<75))
-                        Tag_Name = Encoding.ASCII.GetString(data, 58, Math.Min(58, data.Length - 58));
+                    if ((data.Length > GPS_PacketSize) &&(data.Length<75))
+                        Tag_Name = Encoding.ASCII.GetString(data, GPS_PacketSize, Math.Min(GPS_PacketSize, data.Length - GPS_PacketSize));
                     else
                         Tag_Name = "";
                 }
@@ -705,8 +719,8 @@ namespace Vision
                 {
                     FixAge = 255;
 
-                    if (data.Length > 28)
-                        Tag_Name = Encoding.ASCII.GetString(data, 28, Math.Min(28, data.Length - 28));
+                    if (data.Length > PacketSize)
+                        Tag_Name = Encoding.ASCII.GetString(data, PacketSize, Math.Min(PacketSize, data.Length - PacketSize));
                     else
                         Tag_Name = "";
                 }

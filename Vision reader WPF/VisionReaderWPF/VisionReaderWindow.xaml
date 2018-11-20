@@ -213,7 +213,7 @@
                         <Button x:Name="button_revision" Content="Get Revision" Grid.Column="1" Grid.Row="1" MinWidth="75" Height="20" VerticalAlignment="Center" Width="130" Margin="5,5,5,5" Click="button_revision_Click" HorizontalAlignment="Center"/>
                         <Button x:Name="button_get_status" Content="Get Status" Grid.Column="1" Grid.Row="0" MinWidth="75" Height="20" VerticalAlignment="Center" Width="130" Click="button_get_status_Click" HorizontalAlignment="Center" Margin="5,5,5,5"/>
                         <Button x:Name="button_set_ranger" Content="Set RANGER Settings" Grid.Column="3" Grid.Row="0" MinWidth="75"  Height="20" VerticalAlignment="Center" Click="button_set_ranger_Click" Width="130" Margin="5,5,5,5" HorizontalAlignment="Center"/>
-                        <Button x:Name="button_set_gps" Content="Set GPS100 Settings" Grid.Column="3" Grid.Row="1" MinWidth="75"  Height="20" VerticalAlignment="Center" Click="button_set_gps_Click" Width="130" Margin="5,5,5,5" HorizontalAlignment="Center"/>
+                        <Button x:Name="button_set_gps" Content="Set GPS100 Settings" Grid.Column="3" Grid.Row="1" MinWidth="75"  Height="20" VerticalAlignment="Bottom" Click="button_set_gps_Click" Width="130" Margin="27,0,28,5" HorizontalAlignment="Center"/>
                         <Button x:Name="button_test_stuff" Content="Program EEPROM" Grid.Column="0" Grid.Row="3" Click="button_test_stuff_Click" Height="20" Width="130" Margin="6,0,7,5" VerticalAlignment="Bottom"/>
                     </Grid>
 
@@ -307,6 +307,8 @@
                             </Viewbox>
 
                         </Canvas>
+                        <Button x:Name="button_set_speed" Content="Set Speed" VerticalAlignment="Center" Height="20" Width="130" Click="Button_set_speed_Click" Grid.Column="3" Margin="106,0,81,0" Grid.Row="1"/>
+                        <CheckBox x:Name="Reverse" Content="Reverse" Grid.Column="3" HorizontalAlignment="Left" Margin="106,10,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -318,6 +320,7 @@
                     <Label x:Name="GPS_points" Content="Counter:" HorizontalAlignment="Left" Margin="0,91,0,0" VerticalAlignment="Top" Width="85"/>
                 </Grid>
             </TabItem>
+
         </TabControl>
         <CheckBox x:Name="checkBox_remote_connection" Content="Connect to remote device" HorizontalAlignment="Left" Grid.Row="3" Checked="checkBox_remote_connection_Checked_changed" Unchecked="checkBox_remote_connection_Checked_changed" Margin="10,7,0,0" Width="157" Height="16" VerticalAlignment="Top"/>
         <TextBlock Margin="0" FontWeight="Bold" MinWidth="50" Opacity="{Binding Current_vision.current_TAG.own_LF.AgeOpacity}" Text="{Binding Current_vision.current_TAG.own_LF}" Grid.Column="0" Grid.Row="3" Width="100" HorizontalAlignment="Right" Foreground="Black" Background="#FF3EC1FF"/>

@@ -1540,6 +1540,10 @@ namespace VisionReader
 
         #endregion
 
+        private void Button_set_speed_Click(object sender, RoutedEventArgs e)
+        {
+            Current_vision.Set_Device_Speed((uint)exclusion_time.Value*5000, (bool)Reverse.IsChecked);
+        }
     }
 }
 

@@ -437,7 +437,7 @@ namespace vision_interface
             byte message = data[0];
 
             // starts with R, so this is a remote response. discard the R and UID.  
-            if (message == (byte)'R')
+            if (message == (byte)'R'&& data.Length>2)
             {
                 data = data.Skip(6).ToArray();
             }
@@ -899,6 +899,14 @@ namespace vision_interface
             //BoardInfoCommand();
             Byte[] arr = { (Byte)'w' };
             RetrySendReceiveMessage(arr, "board info");
+        }
+
+        public bool Set_Device_Speed(uint Speed, bool reverse)
+        {
+            byte x = reverse ? (byte)1 : (byte)0;
+            byte[] Speed_arr = BitConverter.GetBytes(Speed);
+            Byte[] message = { (byte)'@', x, 0, Speed_arr[0], Speed_arr[1], Speed_arr[2], Speed_arr[3] };
+            return SendMessage(message);
         }
 
         public void Force_RF_Zone(uint Zone)
