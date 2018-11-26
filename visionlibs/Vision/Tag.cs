@@ -477,7 +477,7 @@ namespace Vision
             // set { SetField(ref Latitude_deg, value, "Latitude_Deg"); }
         }
 
-        private Int32 Horizontal_Acc = 000000;
+        private double Horizontal_Acc = 000000;
         public string Horizontal_Accuracy
         {
             get
@@ -489,7 +489,7 @@ namespace Vision
             // set { SetField(ref Latitude_deg, value, "Latitude_Deg"); }
         }
 
-        private Int32 Vertical_Acc = 000000;
+        private double Vertical_Acc = 000000;
         public string Vertical_Accuracy
         {
             get
@@ -501,7 +501,7 @@ namespace Vision
             // set { SetField(ref Latitude_deg, value, "Latitude_Deg"); }
         }
 
-        private Int32 Vehicle_heading_ = 0000;
+        private double Vehicle_heading_ = 0000;
         public double Heading_v
         {
             get
