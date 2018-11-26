@@ -422,7 +422,7 @@ namespace Vision
         {
             get
             {
-                return (Speed_km_h / 1000.0 * 3.6).ToString() + " km/h";
+                return (Speed_km_h / 277.778).ToString() + " km/h";
             }
             //return Latitude_deg.ToString().PadLeft(4, '0').Insert(2, "."); }
             // get { return Latitude_deg; }
