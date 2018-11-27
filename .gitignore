@@ -193,3 +193,5 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 *.ide
+*.ide-shm
+*.ide-wal
