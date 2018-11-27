@@ -259,9 +259,10 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="90*"/>
-                            <ColumnDefinition Width="90*"/>
-                            <ColumnDefinition Width="90*"/>
+                            <ColumnDefinition Width="38*"/>
+                            <ColumnDefinition Width="279*"/>
+                            <ColumnDefinition Width="316*"/>
+                            <ColumnDefinition Width="317*"/>
                             <ColumnDefinition Width="30"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -272,7 +273,7 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
-                        <Viewbox Grid.ColumnSpan="2" Grid.Column="2" Margin="68,5,71,5" Grid.RowSpan="4" Stretch="Fill" Visibility="Collapsed">
+                        <Viewbox Grid.ColumnSpan="2" Grid.Column="3" Margin="68,5,71,5" Grid.RowSpan="2" Stretch="Fill" Visibility="Collapsed">
                             <Grid Height="110" Width="494">
                                 <Button x:Name="Force_RF_Critical" Content="Force Single GPS Critical Zone"  Grid.Row="0" MinWidth="180" Click="Force_RF_Critical_Zone" Margin="0,0,314,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                                 <Button x:Name="Force_RF_Warning" Content="Force Single GPS Warning Zone" MinWidth="180" Click="Force_RF_Warning_Zone" Margin="0,30,314,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
@@ -282,8 +283,8 @@
                                 <Button x:Name="Force_LF_Presence" Content="Force Single LF Presence Zone" MinWidth="180" Click="Force_LF_Presence_Zone" Margin="314,60,0,0" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                             </Grid>
                         </Viewbox>
-                        <Button x:Name="Force_RF_Repeat" Content="Repeat GPS Zone" MinWidth="180" Click="Force_RF_Repeat_Zone" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2"/>
-                        <Canvas Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top">
+                        <Button x:Name="Force_RF_Repeat" Content="Repeat GPS Zone" MinWidth="180" Click="Force_RF_Repeat_Zone" Width="180" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="3" Margin="68,0"/>
+                        <Canvas Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Top">
                             <Viewbox Height="430"  Stretch="Fill" Width="auto" HorizontalAlignment="Stretch" Canvas.Left="-2" Canvas.Top="-7">
                                 <Grid Height="508" Width="515">
                                     <Rectangle x:Name="Circle_Top_Blue" Fill="Blue" Clip="M71.414671,127.95537 L25.616001,81.176148 C25.616001,81.176148 95.00017,4.9582183 202,6.7915525 C301.49919,8.4963709 368.04169,70.958495 378.375,81.291819 L335.29143,126.20832 C335.29143,126.20832 287.51056,71.764822 204.00008,72.457863 C123.66694,73.124535 71.359791,127.98438 71.375411,128.00001" Margin="54,0,71,380" MouseLeftButtonDown="Circle_Top_Blue_MouseLeftButtonDown" Opacity="0.5" MouseEnter="Rectangle_Section_MouseEnter" MouseLeave="Rectangle_Section_MouseLeave"/>
@@ -307,8 +308,8 @@
                             </Viewbox>
 
                         </Canvas>
-                        <Button x:Name="button_set_speed" Content="Set Speed" VerticalAlignment="Center" Height="20" Width="130" Click="Button_set_speed_Click" Grid.Column="3" Margin="106,0,81,0" Grid.Row="1"/>
-                        <CheckBox x:Name="Reverse" Content="Reverse" Grid.Column="3" HorizontalAlignment="Left" Margin="106,10,0,0" VerticalAlignment="Top"/>
+                        <Button x:Name="button_set_speed" Content="Set Speed" VerticalAlignment="Center" Height="20" Width="130" Click="Button_set_speed_Click" Grid.Column="4" Margin="106,0,81,0" Grid.Row="1"/>
+                        <CheckBox x:Name="Reverse" Content="Reverse" Grid.Column="4" HorizontalAlignment="Left" Margin="106,10,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </Grid>
             </TabItem>

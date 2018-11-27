@@ -1542,7 +1542,7 @@ namespace VisionReader
         int speeder = 0;
         private void Button_set_speed_Click(object sender, RoutedEventArgs e)
         {
-            Current_vision.Set_Device_Speed((uint)(speeder+=10)* 50, (bool)Reverse.IsChecked);
+            Current_vision.Set_Device_Speed((uint)(exclusion_time.Value)* 50, (bool)Reverse.IsChecked);
         }
     }
 }

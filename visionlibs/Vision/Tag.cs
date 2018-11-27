@@ -422,7 +422,7 @@ namespace Vision
         {
             get
             {
-                return (Speed_km_h / 277.778).ToString() + " km/h";
+                return (Math.Round(Speed_km_h / 277.778,2)).ToString() + " km/h";
             }
             //return Latitude_deg.ToString().PadLeft(4, '0').Insert(2, "."); }
             // get { return Latitude_deg; }
@@ -685,8 +685,7 @@ namespace Vision
                 //data25 = vehicle length
                 //data26 = Vehicle width
                 //data27 = stopping distance
-                SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
-
+                SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 28), "Speed");
 
                 if ((Kind == _kind.Pulse_GPS)&&(data.Length>56))
                 {
@@ -697,10 +696,10 @@ namespace Vision
                     //Speed_km_h = BitConverter.ToInt32(data, 40);
                     SetField(ref Longitude_deg, BitConverter.ToInt32(data, 32), "Longitude");
                     SetField(ref Latitude_deg, BitConverter.ToInt32(data, 36), "Latitude");
-                    SetField(ref Vertical_Acc, BitConverter.ToInt32(data, 40), "Vertical_Accuracy");
-                    SetField(ref Horizontal_Acc, BitConverter.ToInt32(data, 44), "Horizontal_Accuracy");
+                    SetField(ref Vertical_Acc, BitConverter.ToUInt32(data, 40), "Vertical_Accuracy");
+                    SetField(ref Horizontal_Acc, BitConverter.ToUInt32(data, 44), "Horizontal_Accuracy");
                     //SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
-                    SetField(ref Vehicle_heading_, BitConverter.ToInt32(data,48), "Heading_v");
+                    SetField(ref Vehicle_heading_, BitConverter.ToUInt32(data,48), "Heading_v");
                     
                     //Last_GPS.HeadingVehicle = BitConverter.ToInt32(data, 48);
                     FixType = (TAG._GPS_FixType)data[52];
