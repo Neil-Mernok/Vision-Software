@@ -309,6 +309,7 @@
 
                         </Canvas>
                         <Button x:Name="button_set_speed" Content="Set Speed" VerticalAlignment="Center" Height="20" Width="130" Click="Button_set_speed_Click" Grid.Column="4" Margin="106,0,81,0" Grid.Row="1"/>
+                        <Button x:Name="button_set_time" Content="Set Time Now" VerticalAlignment="Center" Height="20" Width="130"  Grid.Column="4" Margin="106,0,81,0" Grid.Row="2" Click="Button_set_time_Click"/>
                         <CheckBox x:Name="Reverse" Content="Reverse" Grid.Column="4" HorizontalAlignment="Left" Margin="106,10,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </Grid>
@@ -325,8 +326,8 @@
         </TabControl>
         <CheckBox x:Name="checkBox_remote_connection" Content="Connect to remote device" HorizontalAlignment="Left" Grid.Row="3" Checked="checkBox_remote_connection_Checked_changed" Unchecked="checkBox_remote_connection_Checked_changed" Margin="10,7,0,0" Width="157" Height="16" VerticalAlignment="Top"/>
         <TextBlock Margin="0" FontWeight="Bold" MinWidth="50" Opacity="{Binding Current_vision.current_TAG.own_LF.AgeOpacity}" Text="{Binding Current_vision.current_TAG.own_LF}" Grid.Column="0" Grid.Row="3" Width="100" HorizontalAlignment="Right" Foreground="Black" Background="#FF3EC1FF"/>
-        <TextBox x:Name="textBoxListUID" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" Width="150" Margin="0,4,0,0" Height="22" VerticalAlignment="Top"/>
-        <Label x:Name="label3" Content="Selected UID:" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="3" Margin="0,2,155,0" Width="80" Height="26" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxListUID" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" Width="131" Margin="85,4,0,0" Height="22" VerticalAlignment="Top"/>
+        <Label x:Name="label3" Content="Selected UID:" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="3" Margin="0,2,155,0" Width="80" Height="26" VerticalAlignment="Top"/>
         <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -337,6 +338,11 @@
             <Label x:Name="label4" Content="Current UID:" Grid.Column="2" Margin="0,2,0,0" Height="26" VerticalAlignment="Top"  />
             <TextBox x:Name="textBoxCurUID" TextWrapping="Wrap" Width="133" IsReadOnly="True" Margin="0,4,0,0" Height="22" VerticalAlignment="Top" />
         </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Width="208" >
+            <Label x:Name="Time" Content="Current Time:" Margin="0,2,0,0" Height="26" VerticalAlignment="Top"  />
+            <TextBox x:Name="TimeTextbox" TextWrapping="Wrap" Width="125" IsReadOnly="True" Margin="0,4,0,0" Height="22" VerticalAlignment="Top" />
+        </StackPanel>
+
         <CheckBox x:Name="checkBox_auto_clear" Content="Auto clean list" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" IsChecked="True" Grid.Row="1" Height="15" Width="95" />
         <Label x:Name="label_TagCount" Content="List Total: 0" HorizontalAlignment="left" Width="110" VerticalAlignment="Bottom" FontFamily="Consolas" Margin="147,0,0,5" Grid.Row="1" Height="24" />
         <GroupBox x:Name="groupBox1" Header="List Filter" Grid.Row="1" Margin="0,0,0,1" Grid.Column="1">

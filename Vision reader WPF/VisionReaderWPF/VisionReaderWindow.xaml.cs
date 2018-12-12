@@ -609,6 +609,7 @@ namespace VisionReader
             else if (prop == "UID")
             {
                 textBoxCurUID.Text = Current_vision.current_TAG.Params.UID.ToString("X8");
+                textBoxCurUID.Text = Current_vision.current_TAG.Params.DateTime.ToShortTimeString();
             }
             else if (prop == "current_settings")
             {
@@ -1543,6 +1544,11 @@ namespace VisionReader
         private void Button_set_speed_Click(object sender, RoutedEventArgs e)
         {
             Current_vision.Set_Device_Speed((uint)(exclusion_time.Value)* 50, (bool)Reverse.IsChecked);
+        }
+
+        private void Button_set_time_Click(object sender, RoutedEventArgs e)
+        {
+            Current_vision.Set_Device_Time(DateTime.Now);
         }
     }
 }

@@ -481,6 +481,17 @@ namespace vision_interface
                 current_TAG.Params.UID = BitConverter.ToUInt32(data, 2);
                 Property_changed("UID");
             }
+            else if (message == (Byte)'#' && data.Length >= 7)
+            {
+                if (data[5] > 0 && data[4] > 0)
+                {
+                    current_TAG.Params.DateTime = new DateTime(data[6], data[5], data[4], data[3], data[2], data[1]);
+                }
+                else
+                    current_TAG.Params.DateTime = DateTime.MinValue;
+
+                Property_changed("DateTime");
+            }
             else if (message == (Byte)'v' && data.Length == 3)
             {
                 current_TAG.Params.firmware_rev = data[1];
@@ -906,6 +917,20 @@ namespace vision_interface
             byte x = reverse ? (byte)1 : (byte)0;
             byte[] Speed_arr = BitConverter.GetBytes(Speed);
             Byte[] message = { (byte)'@', x, 0, Speed_arr[0], Speed_arr[1], Speed_arr[2], Speed_arr[3] };
+            return SendMessage(message);
+        }
+
+        public bool Set_Device_Time(DateTime dateTime)
+        {
+            Byte[] message = new byte[7];
+            message[0] = (byte)'#';
+            message[1] = (byte)dateTime.Second;
+            message[2] = (byte)dateTime.Minute;
+            message[3] = (byte)dateTime.Hour;
+            message[4] = (byte)dateTime.Day;
+            message[5] = (byte)dateTime.Month;
+            message[6] = (byte)(dateTime.Year-2000);
+
             return SendMessage(message);
         }
 

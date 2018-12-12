@@ -22,6 +22,7 @@ namespace Vision_Libs.Params
         public int firmware_subrev = 0;
         public static int Mernok_assetfile_rev = 0;
         public uint UID = 0;
+        public DateTime DateTime = DateTime.MinValue;
         public string PCB_ID = "unknown" ;
 
         
@@ -351,6 +352,10 @@ namespace Vision_Libs.Params
         [DisplayName("CAN Heartbeat monitoring")]
         [Description("If true, the tag will monitor heartbeats over CAN Bus, to see if communication with host is still active, if the heartbeat monitoring fails the tag will change to a default tag type.")]
         public bool Heartbeat_monitor { get { return ((TagActivities)this[adr.activity].Value).HasFlag(TagActivities.Heartbeat_monitor); } set { ActsSet(TagActivities.Heartbeat_monitor, value); } }
+        [Category("TAG Function Flags")]
+        [DisplayName("Broadcast Time")]
+        [Description("If true, the tag will broadcast the time that is set on the device.")]
+        public bool Broadcast_Time { get { return ((TagActivities)this[adr.activity].Value).HasFlag(TagActivities.Broadcast_time); } set { ActsSet(TagActivities.Broadcast_time, value); } }
 
 
         private void ActsSet(TagActivities flag, bool value)
