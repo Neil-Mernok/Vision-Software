@@ -609,7 +609,7 @@ namespace VisionReader
             else if (prop == "UID")
             {
                 textBoxCurUID.Text = Current_vision.current_TAG.Params.UID.ToString("X8");
-                textBoxCurUID.Text = Current_vision.current_TAG.Params.DateTime.ToShortTimeString();
+                TimeTextbox.Text = Current_vision.current_TAG.Params.DateTime.ToShortTimeString();
             }
             else if (prop == "current_settings")
             {

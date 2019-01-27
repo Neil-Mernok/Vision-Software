@@ -355,6 +355,6 @@
                 <Label x:Name="label6" Content="Search:" Width="52" VerticalAlignment="Top" Margin="0,-4,129,0" HorizontalAlignment="Right"/>
             </Grid>
         </GroupBox>
-        <ig:HtmlDocumentAdapter HorizontalAlignment="Left" Height="100" Margin="-147,57,0,0" Grid.Row="4" VerticalAlignment="Top" Width="100"/>
+        <!--<ig:HtmlDocumentAdapter HorizontalAlignment="Left" Height="100" Margin="-147,57,0,0" Grid.Row="4" VerticalAlignment="Top" Width="100"/>-->
     </Grid>
 </Window>

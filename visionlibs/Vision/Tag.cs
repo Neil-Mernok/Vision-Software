@@ -125,6 +125,15 @@ namespace Vision
             unknown = 0, PDS = 1, Ranging = 2, Pulse = 3, Ranging_pulse = 4, Pulse_GPS = 5
         };
 
+        public enum _productID
+        {
+            Undefined = 0,
+            Commander100,
+            Commander200,
+            MaxusX,
+            BooycoHMI
+        }
+
         public enum _GPS_FixType
         {
             _NoFix = 0,
@@ -454,7 +463,25 @@ namespace Vision
             get { return ikind; }
             set { SetField(ref ikind, value, "kind"); }
         }
-            
+
+
+        private _productID productID;
+
+        public _productID ProductID
+        {
+            get
+            {
+                if ((byte)productID == 255)
+                    productID = 0;
+                return productID;
+            }
+            set
+            {
+                SetField(ref productID, value, "ProductID");
+            }
+        }
+
+
         private Int32 Longitude_deg = 000000;
         public string Longitude
         {
@@ -668,13 +695,13 @@ namespace Vision
 
                 Last_LF.RSSI = (sbyte)data[19];
 
-                if (Kind == TAG._kind.Ranging)
-                {
-                    dist = BitConverter.ToUInt16(data, 18);
-                    Last_LF.distance = dist;
-                    Last_LF.is_range = true;
-                    RSSI = 0;
-                }
+                //if (Kind == TAG._kind.Ranging)
+                //{
+                //    dist = BitConverter.ToUInt16(data, 18);
+                //    Last_LF.distance = dist;
+                //    Last_LF.is_range = true;
+                //    RSSI = 0;
+                //}
 
                 //TAGGroup = data[21];
                 SetField(ref TAGGroup, data[20], "Group");
@@ -687,46 +714,51 @@ namespace Vision
 
                 FirmRev = data[22];
 
+                ProductID = (_productID)data[23];
+
                 //_MantagAck = data[24];
-                SetField(ref _MantagAck, data[23]&0x01, "MantagAck");
+                SetField(ref _MantagAck, data[24]&0x01, "MantagAck");
                 //data24 = reverse status byte
-                SetField(ref _reverse, data[24] & 0x01, "Reverse");
+                SetField(ref _reverse, data[25] & 0x01, "Reverse");
                 //data25 = vehicle length
                 //data26 = Vehicle width
                 //data27 = stopping distance
-                SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 28), "Speed");
+                SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 29), "Speed");
 
-                if (data[36] > 0 && data[35] > 0)
-                {
-                    DateTime = new DateTime(data[37], data[36], data[35], data[34], data[33], data[32]);
+                int year, month, day, hour, min, sec;
+                int.TryParse((data[38]).ToString(),out year);
+                int.TryParse((data[37]).ToString(), out month);
+                int.TryParse((data[36]).ToString(), out day);
+                int.TryParse((data[35]).ToString(), out hour);
+                int.TryParse((data[34]).ToString(), out min);
+                int.TryParse((data[33]).ToString("X"), out sec);
+
+
+                if (data[37] > 0 && data[36] > 0)
+               {
+                    DateTime = new DateTime(year + 2000, month, day, hour, min, sec);
                 }
                 else
                     DateTime = DateTime.MinValue;
                 
 
-                if ((Kind == _kind.Pulse_GPS)&&(data.Length>56))
+                if ((Kind == _kind.Pulse_GPS)&&(data.Length>63))
                 {
-                    //Longitude_deg = BitConverter.ToInt32(data, 24);
-                    //Latitude_deg = BitConverter.ToInt32(data, 28);
-                    //Vertical_Acc = BitConverter.ToInt32(data, 32);
-                    //Horizontal_Acc = BitConverter.ToInt32(data, 36);
-                    //Speed_km_h = BitConverter.ToInt32(data, 40);
-                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 38), "Longitude");
-                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 42), "Latitude");
-                    SetField(ref Vertical_Acc, BitConverter.ToUInt32(data, 46), "Vertical_Accuracy");
-                    SetField(ref Horizontal_Acc, BitConverter.ToUInt32(data, 50), "Horizontal_Accuracy");
+
+                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 39), "Longitude");
+                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 43), "Latitude");
+                    SetField(ref Vertical_Acc, BitConverter.ToUInt32(data, 47), "Vertical_Accuracy");
+                    SetField(ref Horizontal_Acc, BitConverter.ToUInt32(data, 51), "Horizontal_Accuracy");
                     //SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
-                    SetField(ref Vehicle_heading_, BitConverter.ToUInt32(data,54), "Heading_v");
+                    SetField(ref Vehicle_heading_, BitConverter.ToUInt32(data,55), "Heading_v");
                     
                     //Last_GPS.HeadingVehicle = BitConverter.ToInt32(data, 48);
-                    FixType = (TAG._GPS_FixType)data[58];
- //                   FixAge = data[53];
-                    //Sea_Level_m = BitConverter.ToInt32(data, 50)/1000;
-                    SetField(ref FixAge, data[59], "Fix_Age");
-                    SetField(ref Sea_Level_m, BitConverter.ToInt32(data, 60) / 1000, "Sea_Level");
+                    FixType = (TAG._GPS_FixType)data[59];
+                    SetField(ref FixAge, data[60], "Fix_Age");
+                    SetField(ref Sea_Level_m, BitConverter.ToInt32(data, 61) / 1000, "Sea_Level");
 
 
-                    if ((data.Length > GPS_PacketSize) &&(data.Length<75))
+                    if ((data.Length > GPS_PacketSize) &&(data.Length<79))
                         Tag_Name = Encoding.ASCII.GetString(data, GPS_PacketSize, Math.Min(GPS_PacketSize, data.Length - GPS_PacketSize));
                     else
                         Tag_Name = "";
@@ -734,6 +766,16 @@ namespace Vision
                 else if(Kind != _kind.Pulse_GPS)
                 {
                     FixAge = 255;
+                    SetField(ref Longitude_deg, 0, "Longitude");
+                    SetField(ref Latitude_deg, 0, "Latitude");
+                    SetField(ref Vertical_Acc, 0, "Vertical_Accuracy");
+                    SetField(ref Horizontal_Acc,0, "Horizontal_Accuracy");
+                    //SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
+                    SetField(ref Vehicle_heading_, 0, "Heading_v");
+
+                    //Last_GPS.HeadingVehicle = BitConverter.ToInt32(data, 48);
+                    FixType = (TAG._GPS_FixType)0;
+                    SetField(ref Sea_Level_m, 0, "Sea_Level");
 
                     if (data.Length > PacketSize)
                         Tag_Name = Encoding.ASCII.GetString(data, PacketSize, Math.Min(PacketSize, data.Length - PacketSize));

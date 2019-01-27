@@ -61,8 +61,9 @@ namespace Vision_Libs.Params
             CAN_heartbeat_time = 0x7c,          //32 - byte for CAN heatbeat monitoring timeout
             CAN_revert = 0x80,                  //byte to change tag type when heartbeat monitoring times out
             Mernok_Asset_list_rev = 0x84,       //byte used to show the version of the mernok asset file last read
-            Mernok_Asset_Length = 0x88,
-            Mernok_Asset_Width = 0x8C,        
+            Mernok_Asset_Length = 0x88,         //byte used to spesify vehicle lenth
+            Mernok_Asset_Width = 0x8C,          //byte used to specify vehicle width
+            Product_ID = 0x90,                  //byte used to determine product ID
 
             Mernok_Asset_Group = 0x100,          //byte that determines the Mernok Asset Group number
             
@@ -90,6 +91,19 @@ namespace Vision_Libs.Params
             seven = 6,
             [Description("10 dB")]
             ten = 7
+        }
+
+        public enum Product_codes
+        {
+            [Description("Commander100")]
+            C100=1,
+            [Description("Commander200")]
+            C200=2,
+            [Description("MAXUS X")]
+            M10=3,
+            [Description("Booyco HMI")]
+            B1=4
+
         }
 
         public List<Parameter> Params;
@@ -156,6 +170,7 @@ namespace Vision_Libs.Params
             Params.Add(new Parameter((int)adr.Mernok_Asset_list_rev, Parameter.Type.TypeByte, 0, "Mernok Asset Group file rev"));
             Params.Add(new Parameter((int)adr.Mernok_Asset_Length, Parameter.Type.TypeByte, 0, "Mernok Asset Length"));
             Params.Add(new Parameter((int)adr.Mernok_Asset_Width, Parameter.Type.TypeByte, 0, "Mernok Asset Width"));
+            Params.Add(new Parameter((int)adr.Product_ID, Parameter.Type.TypeByte, 1, "Product ID"));
 
         }
 
@@ -193,7 +208,7 @@ namespace Vision_Libs.Params
             Params.Add(new Parameter((int)adr.Mernok_Asset_list_rev, Parameter.Type.TypeByte, (UInt32)Mernok_assetfile_rev, "Mernok Asset Group file rev"));
             Params.Add(new Parameter((int)adr.Mernok_Asset_Length, Parameter.Type.TypeByte, 0, "Mernok Asset Length"));
             Params.Add(new Parameter((int)adr.Mernok_Asset_Width, Parameter.Type.TypeByte, 0, "Mernok Asset Width"));
-
+            Params.Add(new Parameter((int)adr.Product_ID, Parameter.Type.TypeByte, 0, "Product ID"));
 
             StatusVals.Add(new Parameter(10, Parameter.Type.TypeInt, 0, "LF Coil frequency X"));
             StatusVals.Add(new Parameter(11, Parameter.Type.TypeInt, 0, "LF Coil frequency Y"));
@@ -241,19 +256,7 @@ namespace Vision_Libs.Params
         {
             get
             {
-                //if ((this[adr.Mernok_Asset_list_rev].Value != 0)&&(this[adr.Mernok_Asset_list_rev].Value != 255))
-                    return (UInt16)this[adr.Mernok_Asset_list_rev].Value;
-                //else if(this[adr.Mernok_Asset_list_rev].Value == 255)
-                //{
-                //    //MessageBox.Show("No mernok asset file loaded");
-                //    return 0;
-                //}
-                //else
-                //{
-                //    this[adr.Mernok_Asset_list_rev].Value = (UInt16)Mernok_assetfile_rev;
-                //    return (UInt16)Mernok_assetfile_rev;
-                //}
-                    
+                return (UInt16)this[adr.Mernok_Asset_list_rev].Value;                  
             }
         }
 
@@ -429,6 +432,7 @@ namespace Vision_Libs.Params
                 this[adr.slave_id].Value = value;
             }
         }
+
         //vehic_id = 0x18,	
         [Category("Tag Settings")]
         [DisplayName("Vehicle ID")]
@@ -555,7 +559,7 @@ namespace Vision_Libs.Params
             get { return (UInt16)Params.Find(x => x.address == (int)adr.lfPeriod).Value; }
             set
             {
-                value = Math.Max(value, (UInt16)500);
+                value = Math.Max(value, (UInt16)100);
                 value = Math.Min(value, (UInt16)2000);
                 Params.Find(x => x.address == (int)adr.lfPeriod).Value = value;
             }
@@ -581,13 +585,13 @@ namespace Vision_Libs.Params
         [Description("The frequency for the LF transmitter/receiver")]
         public uint LF_Hertz
         {
-            get { return this[adr.lf_hertz].Value; }
+            get { return this[adr.lf_hertz].Value+1000; }
             set
             {
                 value = Math.Min(value, 150000);
                 value = Math.Max(value, 30000);
 
-                this[adr.lf_hertz].Value = value;
+                this[adr.lf_hertz].Value = value-1000;
             }
         }
         //max_dist = 0x3c,    
@@ -767,6 +771,17 @@ namespace Vision_Libs.Params
                 value = Math.Max(value, (Byte)0);
                 this[adr.Mernok_Asset_Width].Value = value;
             }
+        }
+
+        //Product ID = 0x90, 
+        [TypeConverter(typeof(Jcl.Util.EnumDescConverter))]
+        [Category("Tag Settings")]
+        [DisplayName("Product ID")]
+        [Description("The product this Tag is associated with. Should be managed by the vehicle controller.")]
+        public Product_codes ProductID
+        {
+            get { return (Product_codes)(this[adr.Product_ID].Value); }
+            set { this[adr.Product_ID].Value = (UInt32)value; }
         }
 
 
