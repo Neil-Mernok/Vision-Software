@@ -726,12 +726,19 @@ namespace Vision
                 SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 29), "Speed");
 
                 int year, month, day, hour, min, sec;
-                int.TryParse((data[38]).ToString(),out year);
-                int.TryParse((data[37]).ToString(), out month);
-                int.TryParse((data[36]).ToString(), out day);
-                int.TryParse((data[35]).ToString(), out hour);
-                int.TryParse((data[34]).ToString(), out min);
-                int.TryParse((data[33]).ToString("X"), out sec);
+                //int.TryParse((data[38]).ToString(),out year);
+                //int.TryParse((data[37]).ToString(), out month);
+                //int.TryParse((data[36]).ToString(), out day);
+                //int.TryParse((data[35]).ToString(), out hour);
+                //int.TryParse((data[34]).ToString(), out min);
+                //int.TryParse((data[33]).ToString(), out sec);
+
+                year = data[38];
+                month = data[37];
+                day = data[36];
+                hour = data[35];
+                min = data[34];
+                sec = data[33];
 
 
                 if (data[37] > 0 && data[36] > 0)
