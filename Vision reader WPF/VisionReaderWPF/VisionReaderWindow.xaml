@@ -309,7 +309,7 @@
 
                         </Canvas>
                         <Button x:Name="button_set_speed" Content="Set Speed" VerticalAlignment="Center" Height="20" Width="130" Click="Button_set_speed_Click" Grid.Column="4" Margin="106,0,81,0" Grid.Row="1"/>
-                        <Button x:Name="button_set_time" Content="Set Time Now" VerticalAlignment="Center" Height="20" Width="130"  Grid.Column="4" Margin="106,0,81,0" Grid.Row="2" Click="Button_set_time_Click"/>
+                        <Button x:Name="button_set_time" Content="Set Time Now" VerticalAlignment="Bottom" Height="20" Width="130"  Grid.Column="4" Margin="106,0,81,0" Grid.Row="2" Click="Button_set_time_Click"/>
                         <CheckBox x:Name="Reverse" Content="Reverse" Grid.Column="4" HorizontalAlignment="Left" Margin="106,10,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </Grid>

@@ -359,6 +359,10 @@ namespace Vision_Libs.Params
         [DisplayName("Broadcast Time")]
         [Description("If true, the tag will broadcast the time that is set on the device.")]
         public bool Broadcast_Time { get { return ((TagActivities)this[adr.activity].Value).HasFlag(TagActivities.Broadcast_time); } set { ActsSet(TagActivities.Broadcast_time, value); } }
+        [Category("TAG Function Flags")]
+        [DisplayName("Pulse400to300")]
+        [Description("If true, the tag will broadcast the time that is set on the device.")]
+        public bool Pulse400to300 { get { return ((TagActivities)this[adr.activity].Value).HasFlag(TagActivities.Pulse400to300); } set { ActsSet(TagActivities.Pulse400to300, value); } }
 
 
         private void ActsSet(TagActivities flag, bool value)

@@ -33,6 +33,7 @@ namespace Vision
         [Browsable(false)] GPS_Capable = 1 << 21,               // Device will send LF response even if LF CRC failed.
         [Browsable(false)] Heartbeat_monitor = 1 << 22,          // this will enable the tag to do heartbeat monitoring. Currently used for Trafic light applications.
         [Browsable(false)] Broadcast_time = 1 << 23,
+        [Browsable(false)] Pulse400to300 = 1 << 24,
 
         //[Browsable(false)]
         Pulse100 = tag_enable | broadcast_ID | LF_response | output_critical | send_name,

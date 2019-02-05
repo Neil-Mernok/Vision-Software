@@ -269,17 +269,17 @@ namespace Vision
 
         }
 
-        public Uri typeIconUri
-        {
-            get
-            {
-                //return new Uri(Path.Combine(Environment.CurrentDirectory, "TagTypes/assets/drawable", "type_icon" + TAGType + ".png"));     // use this for Embedded resources (files present in the output directory)
+        //public Uri typeIconUri
+        //{
+        //    get
+        //    {
 
-                return new Uri("pack://application:,,,/Vision Libs;component/TagTypes/assets/drawable/type_icon" + TAGType + ".png");         // use this for Resources (compiled into Dll)
-                //return new Uri("pack://application:,,,/Vision Libs;component/TagTypes/assets/drawable/type_icon" + TagTypesL.MernokAssetType[TAGType - 1].Type + ".png");         // use this for Resources (compiled into Dll)
-            }
-            set { OnPropertyChanged("typeIconUri"); }
-        }
+        //        return 0;
+        //        return new Uri(@"../visionlibs/TagTypes/assets/drawable/type_icon0.png", UriKind.Relative);
+        //        //return new Uri("pack://application:,,,/Vision Libs;component/TagTypes/assets/drawable/type_icon" + TAGType + ".png");
+        //    }
+        //    set { OnPropertyChanged("typeIconUri"); }
+        //}
 
         public string Last_seen
         {
@@ -635,7 +635,7 @@ namespace Vision
 
         public void parse_message_into_TAG(byte[] data)
         {
-            int PacketSize = 38;
+            int PacketSize = 39;
             int GPS_PacketSize = 64;
             SetField(ref _UID, parse_message_UID(data), "UID");
 
