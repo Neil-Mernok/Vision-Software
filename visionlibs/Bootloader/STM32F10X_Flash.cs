@@ -255,6 +255,7 @@ namespace Vision_Bootloader
         public int Sendblock_Remote(ref SerialPort P)
         {
             int bytes_sent = 0;
+            Byte c = 0;
             int bytes_left = Flash_binary.Length - byte_counter;
             Byte[] buffer = new Byte[Flash_page_size];
             Byte[] inbuf = new Byte[8];
@@ -274,7 +275,7 @@ namespace Vision_Bootloader
             {
                 // clean the uart incoming data to make sure we wait for the right byte
                 P.DiscardInBuffer();
-                P.ReadTimeout = 500;
+                P.ReadTimeout = 2000;
                 
                 int inner_bytes_sent = 0;
                 int inner_bytes_to_send = buffer.Length;
@@ -282,12 +283,13 @@ namespace Vision_Bootloader
 
                 while (P.BytesToWrite != 0) ;
 
-                Thread.Sleep(10);
-                byte[] debug_buffer = new byte[1500];
-
+//                Thread.Sleep(10);
+//                byte[] debug_buffer = new byte[1500];
+                
                 MemoryStream stream = new MemoryStream();
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
+                    int i = 0;
                     while (inner_bytes_to_send > 0)
                     {
 
@@ -297,14 +299,17 @@ namespace Vision_Bootloader
                             //writer.Write('Z');
                             //writer.Write('B');
                             //writer.Write(buffer, inner_bytes_sent, chunk);
-
+                            
                             byte[] chunk_buffer = new byte[chunk + 2];
+                            //byte[] chunk_buffer = Enumerable.Repeat((byte)i, chunk + 2).ToArray();
+                            i++;
                             chunk_buffer[0] = (byte)'Z';
                             chunk_buffer[1] = (byte)'B';
 
-                            Array.Copy(buffer, inner_bytes_sent, debug_buffer, inner_bytes_sent, chunk);
+                            //Array.Copy(buffer, inner_bytes_sent, debug_buffer, inner_bytes_sent, chunk);
                             Array.Copy(buffer, inner_bytes_sent, chunk_buffer, 2, chunk);
-                            writer.Write(SerialFrame.getFrame(chunk_buffer), 0, (chunk + 8));
+                            Thread.Sleep(5);
+                            P.Write(SerialFrame.getFrame(chunk_buffer), 0, (chunk + 8));
 
                             inner_bytes_to_send -= chunk;
                             inner_bytes_sent += chunk;
@@ -317,31 +322,37 @@ namespace Vision_Bootloader
                             //writer.Write(buffer, inner_bytes_sent, inner_bytes_to_send);
 
                             byte[] chunk_buffer = new byte[inner_bytes_to_send + 2];
+                            //byte[] chunk_buffer = Enumerable.Repeat((byte)i, inner_bytes_to_send + 2).ToArray();
+                            //i++;
                             chunk_buffer[0] = (byte)'Z';
                             chunk_buffer[1] = (byte)'E';
 
                             Array.Copy(buffer, inner_bytes_sent, chunk_buffer, 2, inner_bytes_to_send);
-                            writer.Write(SerialFrame.getFrame(chunk_buffer), 0, (inner_bytes_to_send + 8));
+                            Thread.Sleep(5);
+                            P.Write(SerialFrame.getFrame(chunk_buffer), 0, (inner_bytes_to_send + 8));
 
                             inner_bytes_sent += inner_bytes_to_send;
                             inner_bytes_to_send = 0;
                         }
+                        
                     }
+//                    Thread.Sleep(700);
+                    P.DiscardInBuffer();
+                    //P.Write(stream.ToArray(), 0, (int)stream.Length);
+ //                   Thread.Sleep(700); //0B0E626D
 
-                    P.Write(stream.ToArray(), 0, (int)stream.Length);
                 }
             }
-            catch (Exception)
+            catch (Exception d)
             {
-                Console.WriteLine("SendBlock remote catch STM32F10X");
+                Console.WriteLine("SendBlock remote catch STM32F10X" + d.Message);
                 return 0;
             }
 
             try
             {
-                Byte c = 0;
-
-                Thread.Sleep(500);
+                Thread.Sleep(2);
+                //               Thread.Sleep(500);
 
                 if (SerialFrame.getMessage(ref P, out inbuf))
                 {

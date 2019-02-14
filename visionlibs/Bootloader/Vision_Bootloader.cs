@@ -173,18 +173,18 @@ namespace vision_boot
 
                             var fd = stream.ToArray();
                             P.Write(fd, 0, fd.Length);
-                            while (P.BytesToWrite != 0) ;
-                            Thread.Sleep(10);
-                            P.Write(fd, 0, fd.Length);
-                            while (P.BytesToWrite != 0) ;
-                            Thread.Sleep(10);
-                            P.Write(fd, 0, fd.Length);
-                            while (P.BytesToWrite != 0) ;
-                            Thread.Sleep(10);
+                            //while (P.BytesToWrite != 0) ;
+                            //Thread.Sleep(10);
+                            //P.Write(fd, 0, fd.Length);
+                            //while (P.BytesToWrite != 0) ;
+                            //Thread.Sleep(10);
+                            //P.Write(fd, 0, fd.Length);
+                            //while (P.BytesToWrite != 0) ;
+                            //Thread.Sleep(10);
                         }
 
-                        while (P.BytesToWrite != 0)
-                            Thread.Sleep(1);
+                        //while (P.BytesToWrite != 0)
+                        //    Thread.Sleep(1);
                         P.Close();
                     }
                     else if (isCantester)
@@ -305,7 +305,7 @@ namespace vision_boot
                     }
                 } while (err_count < 15);
 
-                Thread.Sleep(500);
+//                Thread.Sleep(500);
 
                 ////////////////////////////////////////////////////////////////////////////////////////
                 /// get the bootloader revision
@@ -317,7 +317,7 @@ namespace vision_boot
                     {
                         P.DiscardInBuffer();
                         Thread.Sleep(20);
-                        //P.ReadTimeout = 500;
+                        P.ReadTimeout = 500;
 
                         if (isCantester)
                         {
@@ -347,7 +347,9 @@ namespace vision_boot
                                 byte[] Bootloader_REV = System.Text.Encoding.ASCII.GetBytes("ZEC");
                                 byte[] CRC_Array = SerialFrame.getFrame(Bootloader_REV);
                                 //P.Write("ZEC");           // get the bootloader revision.
+                                P.DiscardInBuffer();
                                 P.Write(CRC_Array.ToArray(), 0, CRC_Array.Length);           // get the bootloader revision. 
+                                Thread.Sleep(2);
                                 if (SerialFrame.getMessage(ref P, out in_frame))
                                 {
                                     if (in_frame[0] == 'b')
@@ -432,7 +434,7 @@ namespace vision_boot
                         P.DiscardInBuffer();
 
                         send_size_data((uint)data.Length);
-                        //P.ReadTimeout = 3500;
+                        P.ReadTimeout = 3500;
                         if (isCantester)
                         {
                             //  while (Can_received == false) ;
@@ -478,7 +480,7 @@ namespace vision_boot
                         System.Threading.Thread.Sleep(100);
                         if (bytes_sent != 0)
                             error_count = 0;
-                        else if(error_count++ > 5)
+                        else if (error_count++ > 20)
                         {
                             error = "Error sending sector at " + progress.ToString() + "%";
                             return false;

@@ -742,12 +742,12 @@ namespace Vision
 
 
                 if (data[37] > 0 && data[36] > 0)
-               {
+                {
                     DateTime = new DateTime(year + 2000, month, day, hour, min, sec);
                 }
                 else
                     DateTime = DateTime.MinValue;
-                
+
 
                 if ((Kind == _kind.Pulse_GPS)&&(data.Length>63))
                 {
