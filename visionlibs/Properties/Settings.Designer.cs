@@ -8,96 +8,77 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Vision_Libs.Properties
-{
-
-
+namespace Vision_Libs.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
-    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
-        public string Last_Port
-        {
-            get
-            {
+        public string Last_Port {
+            get {
                 return ((string)(this["Last_Port"]));
             }
-            set
-            {
+            set {
                 this["Last_Port"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("115200")]
-        public int Ranger_Baud
-        {
-            get
-            {
+        public int Ranger_Baud {
+            get {
                 return ((int)(this["Ranger_Baud"]));
             }
-            set
-            {
+            set {
                 this["Ranger_Baud"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("7E41")]
-        public string Ranger_PID
-        {
-            get
-            {
+        public string Ranger_PID {
+            get {
                 return ((string)(this["Ranger_PID"]));
             }
-            set
-            {
+            set {
                 this["Ranger_PID"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0403")]
-        public string Ranger_VID
-        {
-            get
-            {
+        public string Ranger_VID {
+            get {
                 return ((string)(this["Ranger_VID"]));
             }
-            set
-            {
+            set {
                 this["Ranger_VID"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TITAN VISION ATCs")]
-        public string Report_path
-        {
-            get
-            {
+        [global::System.Configuration.DefaultSettingValueAttribute("Pulse module Reports")]
+        public string Report_path {
+            get {
                 return ((string)(this["Report_path"]));
             }
-            set
-            {
+            set {
                 this["Report_path"] = value;
             }
         }

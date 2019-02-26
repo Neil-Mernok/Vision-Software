@@ -396,7 +396,7 @@ namespace Vision_Libs.Params
         [TypeConverter(typeof(AssetListConverter))]
         public String AssetType
         {
-            get { if((int)this[adr.tag_type].Value > TagTypesL.MenokAssetTypeName.Count || (int)this[adr.tag_type].Value == 255 || (int)this[adr.tag_type].Value ==0 )
+            get { if((int)this[adr.tag_type].Value == 255 || (int)this[adr.tag_type].Value ==0 )
                 {
                     return TagTypesL.MenokAssetTypeName[(int)TagType.Loco-1];
                 }

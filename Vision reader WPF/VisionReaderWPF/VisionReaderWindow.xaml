@@ -1,4 +1,4 @@
-﻿<Window x:Class="VisionReader.MainWindow"
+﻿<Window
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,6 +9,7 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         xmlns:local="clr-namespace:VisionReader"
+        xmlns:ig="http://schemas.infragistics.com/xaml" x:Class="VisionReader.MainWindow"
         mc:Ignorable="d"
         Title="VISION Module Interface - V14" Height="768" Width="1024" Closing="Window_Closing" Loaded="Window_Loaded">
     <!--Window.Background>
@@ -354,5 +355,6 @@
                 <Label x:Name="label6" Content="Search:" Width="52" VerticalAlignment="Top" Margin="0,-4,129,0" HorizontalAlignment="Right"/>
             </Grid>
         </GroupBox>
+        <!--<ig:HtmlDocumentAdapter HorizontalAlignment="Left" Height="100" Margin="-147,57,0,0" Grid.Row="4" VerticalAlignment="Top" Width="100"/>-->
     </Grid>
 </Window>
