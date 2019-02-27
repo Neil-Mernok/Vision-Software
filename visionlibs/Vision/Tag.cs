@@ -299,6 +299,16 @@ namespace Vision
 
         }
 
+        private int _Distress;
+        public bool Distress
+        {
+            get
+            {
+                return Convert.ToBoolean(_Distress);
+            }
+
+        }
+
         public string Voltage
         {
             get
@@ -635,8 +645,8 @@ namespace Vision
 
         public void parse_message_into_TAG(byte[] data)
         {
-            int PacketSize = 39;
-            int GPS_PacketSize = 64;
+            int PacketSize = 40;
+            int GPS_PacketSize = 66;
             SetField(ref _UID, parse_message_UID(data), "UID");
 
             if (data.Length == 8)
@@ -719,11 +729,12 @@ namespace Vision
                 //_MantagAck = data[24];
                 SetField(ref _MantagAck, data[24]&0x01, "MantagAck");
                 //data24 = reverse status byte
-                SetField(ref _reverse, data[25] & 0x01, "Reverse");
+                SetField(ref _Distress, data[25] & 0x01, "Distress");
+                SetField(ref _reverse, data[26] & 0x01, "Reverse");
                 //data25 = vehicle length
                 //data26 = Vehicle width
                 //data27 = stopping distance
-                SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 29), "Speed");
+                SetField(ref Speed_km_h, BitConverter.ToUInt32(data, 30), "Speed");
 
                 int year, month, day, hour, min, sec;
                 //int.TryParse((data[38]).ToString(),out year);
@@ -733,15 +744,15 @@ namespace Vision
                 //int.TryParse((data[34]).ToString(), out min);
                 //int.TryParse((data[33]).ToString(), out sec);
 
-                year = data[38];
-                month = data[37];
-                day = data[36];
-                hour = data[35];
-                min = data[34];
-                sec = data[33];
+                year = data[39];
+                month = data[38];
+                day = data[37];
+                hour = data[36];
+                min = data[35];
+                sec = data[34];
 
 
-                if (data[37] > 0 && data[36] > 0)
+                if (data[38] > 0 && data[37] > 0)
                 {
                     DateTime = new DateTime(year + 2000, month, day, hour, min, sec);
                 }
@@ -749,23 +760,23 @@ namespace Vision
                     DateTime = DateTime.MinValue;
 
 
-                if ((Kind == _kind.Pulse_GPS)&&(data.Length>63))
+                if ((Kind == _kind.Pulse_GPS)&&(data.Length>66))
                 {
 
-                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 39), "Longitude");
-                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 43), "Latitude");
-                    SetField(ref Vertical_Acc, BitConverter.ToUInt32(data, 47), "Vertical_Accuracy");
-                    SetField(ref Horizontal_Acc, BitConverter.ToUInt32(data, 51), "Horizontal_Accuracy");
+                    SetField(ref Longitude_deg, BitConverter.ToInt32(data, 40), "Longitude");
+                    SetField(ref Latitude_deg, BitConverter.ToInt32(data, 44), "Latitude");
+                    SetField(ref Vertical_Acc, BitConverter.ToUInt32(data, 48), "Vertical_Accuracy");
+                    SetField(ref Horizontal_Acc, BitConverter.ToUInt32(data, 52), "Horizontal_Accuracy");
                     //SetField(ref Speed_km_h, BitConverter.ToInt32(data, 28), "Speed");
-                    SetField(ref Vehicle_heading_, BitConverter.ToUInt32(data,55), "Heading_v");
+                    SetField(ref Vehicle_heading_, BitConverter.ToUInt32(data,56), "Heading_v");
                     
                     //Last_GPS.HeadingVehicle = BitConverter.ToInt32(data, 48);
-                    FixType = (TAG._GPS_FixType)data[59];
-                    SetField(ref FixAge, data[60], "Fix_Age");
-                    SetField(ref Sea_Level_m, BitConverter.ToInt32(data, 61) / 1000, "Sea_Level");
+                    FixType = (TAG._GPS_FixType)data[60];
+                    SetField(ref FixAge, data[61], "Fix_Age");
+                    SetField(ref Sea_Level_m, BitConverter.ToInt32(data, 62) / 1000, "Sea_Level");
 
 
-                    if ((data.Length > GPS_PacketSize) &&(data.Length<79))
+                    if ((data.Length > GPS_PacketSize) &&(data.Length<80))
                         Tag_Name = Encoding.ASCII.GetString(data, GPS_PacketSize, Math.Min(GPS_PacketSize, data.Length - GPS_PacketSize));
                     else
                         Tag_Name = "";

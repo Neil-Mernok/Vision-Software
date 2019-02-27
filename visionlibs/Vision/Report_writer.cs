@@ -12,7 +12,7 @@ namespace Vision.Parameter
 {
     public class report_test
     {
-        public string Module_Functionality{ get; set; }
+        public string Module_Functionality { get; set; }
         public string Result
         {
             get
@@ -44,10 +44,10 @@ namespace Vision.Parameter
                 return BaseColor.DARK_GRAY;
             else if (used == false)
                 return BaseColor.LIGHT_GRAY;
-            else 
+            else
                 return BaseColor.RED;
         }
-       
+
     }
 
     public class Report_writer
@@ -73,7 +73,7 @@ namespace Vision.Parameter
         public void Show_test_reportWPF(ref System.Windows.Controls.DataGrid DG)
         {
             DG.ItemsSource = null;
-            
+
             DG.AutoGenerateColumns = true;
             DG.ItemsSource = lines;
 
@@ -102,12 +102,12 @@ namespace Vision.Parameter
             //Exporting to PDF
             DateTime N = DateTime.Now;
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + report_path;
-            string path = folderPath + "\\" + Test_Level +" 0x" + UID.ToString("X8") + " , " + N.ToString("yyyy-MM-d , HH;mm;ss") + ".pdf";
+            string path = folderPath + "\\" + Test_Level + " 0x" + UID.ToString("X8") + " , " + N.ToString("yyyy-MM-d , HH;mm;ss") + ".pdf";
 
             Directory.CreateDirectory(folderPath);
             using (FileStream stream = new FileStream(path, FileMode.Create))
             {
-                PdfWriter.GetInstance(Doc, stream);
+                PdfWriter writer = PdfWriter.GetInstance(Doc, stream);
                 Doc.Open();
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ namespace Vision.Parameter
                 PTestLevel.SpacingAfter = 10f;
                 Paragraph Ptitle = new Paragraph("UID: 0x" + UID.ToString("X8"), fontText);
                 Ptitle.SpacingAfter = 10f;
-                Paragraph PBoardInfo = new Paragraph("PCB number: " + PCB_Number , fontText);
+                Paragraph PBoardInfo = new Paragraph("PCB number: " + PCB_Number, fontText);
                 PBoardInfo.SpacingAfter = 10f;
                 Paragraph PFirmwareRev = new Paragraph("Firmware: " + Firmware_Rev, fontText);
                 PFirmwareRev.SpacingAfter = 10f;
@@ -174,7 +174,7 @@ namespace Vision.Parameter
 
                 Paragraph Pnotes = new Paragraph(notes, fontText);
                 Doc.Add(Pnotes);
-               
+
                 //////////////////////////////////////////////////////////////////////////////////////////////////
                 Doc.Close();
                 stream.Close();
