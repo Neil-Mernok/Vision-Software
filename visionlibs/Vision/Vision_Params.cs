@@ -589,13 +589,13 @@ namespace Vision_Libs.Params
         [Description("The frequency for the LF transmitter/receiver")]
         public uint LF_Hertz
         {
-            get { return this[adr.lf_hertz].Value+1000; }
+            get { return this[adr.lf_hertz].Value; }
             set
             {
                 value = Math.Min(value, 150000);
                 value = Math.Max(value, 30000);
 
-                this[adr.lf_hertz].Value = value-1000;
+                this[adr.lf_hertz].Value = value;
             }
         }
         //max_dist = 0x3c,    

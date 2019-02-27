@@ -760,7 +760,7 @@ namespace Vision
                     DateTime = DateTime.MinValue;
 
 
-                if ((Kind == _kind.Pulse_GPS)&&(data.Length>66))
+                if ((Kind == _kind.Pulse_GPS)&&(data.Length>=66))
                 {
 
                     SetField(ref Longitude_deg, BitConverter.ToInt32(data, 40), "Longitude");
