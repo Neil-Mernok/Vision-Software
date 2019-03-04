@@ -206,7 +206,7 @@ namespace Vision
                 error = (status.HasFlag(TAG_status.low_power_mode)) ? "-" : "-";
                 report.lines.Add(new report_test(text, status.HasFlag(TAG_status.low_power_mode), false, error));
 
-                if ((PCB_info[1] == "182") || (PCB_info[1] == "203"))
+                if ((PCB_info[1] == "182") || (PCB_info[1] == "203") || (PCB_info[1] == "173"))
                 {
                     if (status.HasFlag(TAG_status.LF_SPI_working))
                     {
