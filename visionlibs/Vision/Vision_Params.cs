@@ -522,7 +522,7 @@ namespace Vision_Libs.Params
         {
             get
             {
-                if (Firmware_Rev > 13) return TagTypesL.MenokAssetTypeName[(int)this[adr.CAN_revert].Value - 1];
+                if (Firmware_Rev > 13 && (int)this[adr.CAN_revert].Value < TagTypesL.MenokAssetTypeName.Count) return TagTypesL.MenokAssetTypeName[(int)this[adr.CAN_revert].Value - 1];
                 else return "N/A";
             }
             set
