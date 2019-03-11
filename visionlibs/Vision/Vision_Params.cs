@@ -168,8 +168,8 @@ namespace Vision_Libs.Params
             Params.Add(new Parameter((int)adr.CAN_heartbeat_time, Parameter.Type.TypeByte,10, "CAN heartbeat time"));
             Params.Add(new Parameter((int)adr.CAN_revert, Parameter.Type.TypeByte, (UInt32)TagType.Loco, "CAN revert type"));
             Params.Add(new Parameter((int)adr.Mernok_Asset_list_rev, Parameter.Type.TypeByte, 0, "Mernok Asset Group file rev"));
-            Params.Add(new Parameter((int)adr.Mernok_Asset_Length, Parameter.Type.TypeByte, 0, "Mernok Asset Length"));
-            Params.Add(new Parameter((int)adr.Mernok_Asset_Width, Parameter.Type.TypeByte, 0, "Mernok Asset Width"));
+            Params.Add(new Parameter((int)adr.Mernok_Asset_Length, Parameter.Type.TypeByte, 1, "Mernok Asset Length"));
+            Params.Add(new Parameter((int)adr.Mernok_Asset_Width, Parameter.Type.TypeByte, 1, "Mernok Asset Width"));
             Params.Add(new Parameter((int)adr.Product_ID, Parameter.Type.TypeByte, 1, "Product ID"));
 
         }
@@ -680,6 +680,20 @@ namespace Vision_Libs.Params
         }
 
         //lf_filtr = 0x5c,	
+        [Category("Tag Settings")]
+        [DisplayName("LF RSSI Filter (ms)")]
+        [Description("LF filter time constant")]
+        public uint LF_Filter
+        {
+            get { return this[adr.lf_filtr].Value; }
+            set
+            {
+                value = Math.Min(value, 60000);
+                value = Math.Max(value, 0);
+
+                this[adr.lf_filtr].Value = value;
+            }
+        }
         //vchrgmin = 0x60,	
         //rssiCrit = 0x64,	
         [Category("Tag Settings")]
@@ -755,7 +769,7 @@ namespace Vision_Libs.Params
             set
             {
                 value = Math.Min(value, (Byte)255);
-                value = Math.Max(value, (Byte)0);
+                value = Math.Max(value, (Byte)1);
                 this[adr.Mernok_Asset_Length].Value = value;
             }
         }
@@ -772,7 +786,7 @@ namespace Vision_Libs.Params
             set
             {
                 value = Math.Min(value, (Byte)255);
-                value = Math.Max(value, (Byte)0);
+                value = Math.Max(value, (Byte)1);
                 this[adr.Mernok_Asset_Width].Value = value;
             }
         }
