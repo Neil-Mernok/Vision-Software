@@ -140,7 +140,7 @@
         <!--<Label x:Name="label1" Content="Port:" Grid.Column="1" Grid.Row="1" Width="35" VerticalAlignment="Center" Margin="13,2,0,2" HorizontalAlignment="Left" Height="26" />
         <TextBox x:Name="textbox_select_baud"  VerticalAlignment="Center" Width="80" Grid.Column="1" Grid.Row="2" Height="20" Margin="166,5,0,5" HorizontalAlignment="Left"/>
         <Label x:Name="label2" Content="Baud:" Grid.Column="1"  Grid.Row="2" Width="39" VerticalAlignment="Center" Margin="13,2,0,2" HorizontalAlignment="Left" Height="26"/>-->
-        <DataGrid x:Name="dataGrid" Grid.Row="2" Grid.ColumnSpan="3" MinHeight="150" MaxHeight="450" AutoGenerateColumns="True" MinColumnWidth="50" SelectionChanged="dataGrid_SelectionChanged" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AutoGeneratingColumn="dataGrid_AutoGeneratingColumn" CanUserAddRows="False" AlternatingRowBackground="#F3F9F8FF" RowBackground="#00000000" Background="#FFEBF0ED" MouseLeave="dataGrid_MouseLeave" LoadingRow="dataGrid_LoadingRow" ContextMenuOpening="dataGrid_ContextMenuOpening">
+        <DataGrid x:Name="dataGrid" Grid.Row="2" Grid.ColumnSpan="3" MinHeight="100" MaxHeight="120" AutoGenerateColumns="True" MinColumnWidth="50" SelectionChanged="dataGrid_SelectionChanged" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AutoGeneratingColumn="dataGrid_AutoGeneratingColumn" CanUserAddRows="False" AlternatingRowBackground="#F3F9F8FF" RowBackground="#00000000" Background="#FFEBF0ED" MouseLeave="dataGrid_MouseLeave" LoadingRow="dataGrid_LoadingRow" ContextMenuOpening="dataGrid_ContextMenuOpening">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name ="TagOptions"/>
             </DataGrid.ContextMenu>
